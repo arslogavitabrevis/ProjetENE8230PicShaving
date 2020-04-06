@@ -65,15 +65,16 @@ for m in M:
     Mwinter = np.select(
         np.array([(months-1) % 12+1 == 1, (months-1) % 12+1 == 2, (months-1) % 12+1 == 3, (months-1) % 12+1 == 12]).transpose(), months)
     for mw in Mwinter:
-        for t in range(Mbound[mw-1], Mbound[mw]):
-            constraints.append(
-                plp.LpConstraint(
-                    name="MinPowerInvoiceWint_m{:2d}_mw{:2d}_t{:5d}".format(
-                        m, mw, t),
-                    e=plp.LpAffineExpression(
-                        [(Pgridmax[m-1], 1), (Pgrid[t], -0.75)]),
-                    sense=plp.LpConstraintGE,
-                    rhs=0))
+        if mw != m: #Avoid adding unuseful constraint for the actual month
+            for t in range(Mbound[mw-1], Mbound[mw]):
+                constraints.append(
+                    plp.LpConstraint(
+                        name="MinPowerInvoiceWint_m{:2d}_mw{:2d}_t{:5d}".format(
+                            m, mw, t),
+                        e=plp.LpAffineExpression(
+                            [(Pgridmax[m-1], 1), (Pgrid[t], -0.75)]),
+                        sense=plp.LpConstraintGE,
+                        rhs=0))
 
 # Minimum invoiced power from month power
 for m in M:
