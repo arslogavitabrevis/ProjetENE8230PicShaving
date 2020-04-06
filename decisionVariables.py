@@ -45,10 +45,11 @@ Pgridmax = [plp.LpVariable(
     for m in M]
 
 # Minimum power invoice
-Pfacmin = plp.LpVariable(
+Pfacmin = [plp.LpVariable(
     cat=plp.LpContinuous,
     lowBound=0,
-    name="Pfacmin")
+    name="Pfacmin_{}".format(m))
+     for m in M]
 
 # Power generated from all solar panel
 Ppv_gen = [plp.LpVariable(
