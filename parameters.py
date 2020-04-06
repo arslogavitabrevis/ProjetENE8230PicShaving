@@ -18,9 +18,12 @@ Ppv = np.ones(len(T))*400  #in kWh To be changed
 Npv_max = 1000  # To be changed
 Cap_bat = 2  # To be changed
 ETAbat_ch = 0.8  # To be changed
+ETAbat_dc = 0.8
+ETA_inv = 0.6 #To be changed
+
 Pbat_ch_max = 200  # To be changed
 Pbat_dc_max = 200  # To be changed
 Omega = 10000 #Maximum power athorized
-
+D = np.loadtxt("Data/Data1.csv",skiprows=1) #kW
 
 # endregion
