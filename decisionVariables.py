@@ -1,5 +1,5 @@
 import pulp as plp
-from parameters import T, M, Npv_max
+from parameters import T, M, Npv_max, Omega
 
 # region # Decision variables:
 
@@ -41,6 +41,7 @@ Pbdc = [plp.LpVariable(
 Pgridmax = [plp.LpVariable(
     cat=plp.LpContinuous,
     lowBound=0,
+    upBound=Omega,
     name="Pgridmax_{}".format(m))
     for m in M]
 
@@ -49,7 +50,7 @@ Pfacmin = [plp.LpVariable(
     cat=plp.LpContinuous,
     lowBound=0,
     name="Pfacmin_{}".format(m))
-     for m in M]
+    for m in M]
 
 # Power generated from all solar panel
 Ppv_gen = [plp.LpVariable(
@@ -69,6 +70,7 @@ Ebat = [plp.LpVariable(
 Pgrid = [plp.LpVariable(
     cat=plp.LpContinuous,
     lowBound=0,
+    upBound=Omega,
     name="Pgrid_{}".format(t))
     for t in T]
 # endregion

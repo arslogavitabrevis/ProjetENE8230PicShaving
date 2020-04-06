@@ -5,4 +5,7 @@ from constraints import constraints
 # Initialisation du problème d'optimisation
 picShavingProb = plp.LpProblem(name="PicShavingProblem", sense=plp.LpMinimize)
 
-picShavingProb.writeLp("PicShavingProblem.txt")
+for c in constraints:
+    picShavingProb.addConstraint(c)
+
+picShavingProb.writeLP("PicShavingProblem.txt")

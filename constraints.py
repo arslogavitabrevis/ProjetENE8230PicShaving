@@ -1,73 +1,112 @@
 import pulp as plp
 import numpy as np
 from parameters import (
-    T, M, Cap_bat, ETAbat_ch,Pbat_ch_max,Pbat_dc_max,deltaT)
+    T, M, Cap_bat, ETAbat_ch, Pbat_ch_max, Pbat_dc_max, deltaT, Mbound, Omega, Ppv)
 from decisionVariables import (
-    Ppv_bat, Ppv_load, Ppv_gen,Nbat,Pbdc,Ebat,Pfacmin)
+    Ppv_bat, Ppv_load, Ppv_gen, Nbat, Pbdc, Ebat, Pgrid, Pgridmax, Npv)
 
 # region # Definition des contraintes
-
+constraints = []
 # Solar power distribution to load and batteries
-constraints=[]
 for t in T:
     constraints.append(
         plp.LpConstraint(
             name="PvPowerDist_{}".format(t),
             e=plp.LpAffineExpression(
-                [(Ppv_bat[t], 1), (Ppv_load[t], 1), (Ppv_gen, -1)]),
+                [(Ppv_bat[t], 1), (Ppv_load[t], 1), (Ppv_gen[t], -1)]),
             sense=plp.LpConstraintLE,
             rhs=0))
 
 # Maximum batteries capacity
-for t in T:
+for t in T[:-1]:
     constraints.append(
         plp.LpConstraint(
-            name="BatCapacity_{}".format(t),
+            name="BatCapacity_{:5d}".format(t),
             e=plp.LpAffineExpression(
-                [(Pbdc[t], ETAbat_ch), (Nbat, -Cap_bat), (Ebat[t-1], 1)]),
+                [(Pbdc[t+1], ETAbat_ch), (Nbat, -Cap_bat), (Ebat[t], 1)]),
             sense=plp.LpConstraintLE,
             rhs=0))
 
-#Maximum charging power
+# Maximum charging power
 for t in T:
     constraints.append(
         plp.LpConstraint(
-            name="BatChargingPower_{}".format(t),
+            name="BatChargingPower_{:5d}".format(t),
             e=plp.LpAffineExpression(
-                [(Ppv_bat[t], ETAbat_ch), (Nbat,-Pbat_ch_max)]),
+                [(Ppv_bat[t], ETAbat_ch), (Nbat, -Pbat_ch_max)]),
             sense=plp.LpConstraintLE,
             rhs=0))
 
-#Available energy in the batteries
+# Available energy in the batteries
 for t in T:
     constraints.append(
         plp.LpConstraint(
-            name="BatAvailableEnergy_{}".format(t),
+            name="BatAvailableEnergy_{:5d}".format(t),
             e=plp.LpAffineExpression(
-                [(Pbdc[t], deltaT), (Ebat[t-1],-1)]),
+                [(Pbdc[t], deltaT), (Ebat[t-1], -1)]),
             sense=plp.LpConstraintLE,
             rhs=0))
 
-#Battery maximum discharge power
+# Battery maximum discharge power
 for t in T:
     constraints.append(
         plp.LpConstraint(
-            name="BatMaxDischargePower_{}".format(t),
+            name="BatMaxDischargePower_{:5d}".format(t),
             e=plp.LpAffineExpression(
-                [(Pbdc[t], 1), (Nbat,-Pbat_dc_max)]),
+                [(Pbdc[t], 1), (Nbat, -Pbat_dc_max)]),
             sense=plp.LpConstraintLE,
             rhs=0))
 
-#Mimimun power invoice
+# Mimimun power invoice from winter month
 for m in M:
-    months = np.arange(m-11+len(M),m+len(M))%len(M)
-    Mwinter = np.select([month%12 == 1,month%12 == 2,month%12 == 3,month%12 == 12], months)
+    months = np.arange(m-12+len(M), m+len(M)) % len(M) + 1
+    conditions = np.array([months % 12 == 1, months % 12 ==
+                           2, months % 12 == 3, months % 12 == 12]).transpose()
+    Mwinter = np.select(
+        np.array([(months-1) % 12+1 == 1, (months-1) % 12+1 == 2, (months-1) % 12+1 == 3, (months-1) % 12+1 == 12]).transpose(), months)
+    for mw in Mwinter:
+        for t in range(Mbound[mw-1], Mbound[mw]):
+            constraints.append(
+                plp.LpConstraint(
+                    name="MinPowerInvoiceWint_m{:2d}_mw{:2d}_t{:5d}".format(
+                        m, mw, t),
+                    e=plp.LpAffineExpression(
+                        [(Pgridmax[m-1], 1), (Pgrid[t], -0.75)]),
+                    sense=plp.LpConstraintGE,
+                    rhs=0))
+
+# Minimum invoiced power from month power
+for m in M:
+    for t in range(Mbound[m-1], Mbound[m]):
+        constraints.append(
+            plp.LpConstraint(
+                name="MinPowerInvoiceActualMont_m{:2d}_t{:5d}".format(m, t),
+                e=plp.LpAffineExpression(
+                    [(Pgridmax[m-1], 1), (Pgrid[t], -1)]),
+                sense=plp.LpConstraintGE,
+                rhs=0))
+
+# Solar power generation
+for t in T:
     constraints.append(
         plp.LpConstraint(
-            name="MinPowerInvoice_{}".format(m),
+            name="GeneratedPvPower_{:5d}".format(t),
             e=plp.LpAffineExpression(
-                [(Pfacmin[m], 1)] + [(mw,-Pbat_dc_max) for mw in Mwinter]),
-            sense=plp.LpConstraintGE,
+                [(Ppv_gen[t], 1), (Npv, -1)]),
+            sense=plp.LpConstraintEQ,
             rhs=0))
 
-#endregion
+# Energy in the battery
+for t in T:
+    constraints.append(
+        plp.LpConstraint(
+            name="BatteryEnergy_{:5d}".format(t),
+            e=plp.LpAffineExpression(
+                [(Ebat[t], 1), (Ebat[t-1], -1), (Ppv_bat[t], -ETAbat_ch*deltaT), (Pbdc[t], deltaT)]),
+            sense=plp.LpConstraintEQ,
+            rhs=0))
+
+# Power from the grid
+
+
+# endregion
