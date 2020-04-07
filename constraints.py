@@ -72,22 +72,22 @@ for m in M:
                     rhs=0)for t in range(Mbound[mw-1], Mbound[mw])])
 
 # Minimum invoiced power from month power
-constraints.extend([
-    plp.LpConstraint(
-        name="MinPowerInvoiceActualMont_m{:2d}_t{:5d}".format(m, t),
-        e=plp.LpAffineExpression(
-            [(Pgridmax[m-1], 1), (Pgrid[t], -1)]),
-        sense=plp.LpConstraintGE,
-        rhs=0)
-    for t in range(Mbound[m-1], Mbound[m])
-    for m in M])
+for m in M:
+    constraints.extend([
+        plp.LpConstraint(
+            name="MinPowerInvoiceActualMont_m{:2d}_t{:5d}".format(m, t),
+            e=plp.LpAffineExpression(
+                [(Pgridmax[m-1], 1), (Pgrid[t], -1)]),
+            sense=plp.LpConstraintGE,
+            rhs=0)
+        for t in range(Mbound[m-1], Mbound[m])])
 
 # Solar power generation
 constraints.extend(list(map(lambda t:
     plp.LpConstraint(
         name="GeneratedPvPower_{:5d}".format(t),
         e=plp.LpAffineExpression(
-            [(Ppv_gen[t], 1), (Npv, -1)]),
+            [(Ppv_gen[t], 1), (Npv, -Ppv[t-1])]),
         sense=plp.LpConstraintEQ,
         rhs=0), T[1:])))
 
@@ -103,11 +103,11 @@ constraints.extend(list(map(lambda t:
 # Power from the grid
 constraints.extend(list(map(lambda t:
     plp.LpConstraint(
-        name="BatteryEnergy_{:5d}".format(t),
+        name="PowerFromGrid_{:5d}".format(t),
         e=plp.LpAffineExpression(
-            [(Pgrid[t], 1), (D[t-1], -1), (Ppv_load[t], ETA_inv), (Pbdc[t], ETAbat_dc*ETA_inv)]),
+            [(Pgrid[t], 1), (Ppv_load[t], ETA_inv), (Pbdc[t], ETAbat_dc*ETA_inv)]),
         sense=plp.LpConstraintEQ,
-        rhs=0), T[1:])))
+        rhs=D[t-1]), T[1:])))
 
 # Initial energy in the battery charge (must include Nbat if Ebat[0] != 0)
 constraints.append(

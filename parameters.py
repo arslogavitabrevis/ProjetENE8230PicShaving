@@ -14,8 +14,10 @@ T = np.arange(0,sum(Mrange)+1)  # Time of the year for each 15 min
 
 # region #Parameter definition
 # To be changed
-Ppv = np.ones(len(T))*400  #in kWh To be changed
-Npv_max = 1000  # To be changed
+Ppv = np.random.rand(len(T))*400  #in kW To be changed
+
+Npv_max = 500  # To be changed
+
 Cap_bat = 2  # To be changed
 ETAbat_ch = 0.8  # To be changed
 ETAbat_dc = 0.8
@@ -31,8 +33,8 @@ Ckw = 13.26 #$/kW
 CkWh = 0.0346 #$/kWh
 Cbat = 100 #$/battery
 Cbatop = 20 #$/battery/kWh
-Cpv = 100 #$/panel To be changed
-Cpvop = 3 #$/panel/year To be changed
+Cpv = 750 #$/panel To be changed
+Cpvop = 50 #$/panel/year To be changed
 
 #Simulation
 numberOfYear = 20 #To be changed
