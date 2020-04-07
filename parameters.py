@@ -24,6 +24,16 @@ ETA_inv = 0.6 #To be changed
 Pbat_ch_max = 200  # To be changed
 Pbat_dc_max = 200  # To be changed
 Omega = 10000 #Maximum power athorized
-D = np.loadtxt("Data/Data1.csv",skiprows=1) #kW
+D = np.loadtxt("ProjetENE8230PicShaving/Data/Data1.csv",skiprows=1) #kW
 
+#Cost
+Ckw = 13.26 #$/kW
+CkWh = 0.0346 #$/kWh
+Cbat = 100 #$/battery
+Cbatop = 20 #$/battery/kWh
+Cpv = 100 #$/panel To be changed
+Cpvop = 3 #$/panel/year To be changed
+
+#Simulation
+numberOfYear = 20 #To be changed
 # endregion
