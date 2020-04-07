@@ -1,5 +1,5 @@
 import pulp as plp
-from parameters import T, M, Npv_max, Omega
+from parameters import T, M, Npv_max, Nbat_max, Omega, omega
 
 # region # Decision variables:
 
@@ -14,6 +14,7 @@ Npv = plp.LpVariable(
 Nbat = plp.LpVariable(
     cat=plp.LpInteger,
     lowBound=0,
+    upBound=Nbat_max,
     name="Nbat")
 
 # Power from PV stored in the batteries
@@ -37,7 +38,7 @@ Pbdc = [plp.LpVariable(
     name="Pbdc_{}".format(t))
     for t in T]
 
-# Invoice power
+# Maximum power from the grid in this month
 Pgridmax = [plp.LpVariable(
     cat=plp.LpContinuous,
     lowBound=0,
@@ -45,10 +46,17 @@ Pgridmax = [plp.LpVariable(
     name="Pgridmax_{}".format(m))
     for m in M]
 
+# Power invoice for a month
+Pfac = [plp.LpVariable(
+    cat=plp.LpContinuous,
+    lowBound=omega,
+    name="Pfac_{}".format(m))
+    for m in M]
+
 # Minimum power invoice
 Pfacmin = [plp.LpVariable(
     cat=plp.LpContinuous,
-    lowBound=0,
+    lowBound=omega,
     name="Pfacmin_{}".format(m))
     for m in M]
 
