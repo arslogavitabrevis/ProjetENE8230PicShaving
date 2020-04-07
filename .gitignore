@@ -129,3 +129,7 @@ dmypy.json
 .pyre/
 desktop.ini
 .idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/ProjetENE8230PicShaving.iml
+.idea/vcs.xml

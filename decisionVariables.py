@@ -81,4 +81,9 @@ Pgrid = [plp.LpVariable(
     upBound=Omega,
     name="Pgrid_{}".format(t))
     for t in T]
+
+decisionVariables = {"Npv": [Npv], "Nbat": [Nbat], "Ppv_bat": Ppv_bat,
+                     "Ppv_load": Ppv_load, "Pbdc": Pbdc, "Pgridmax": Pgridmax,
+                     "Pfac": Pfac, "Pfacmin": Pfacmin, "Ppv_gen": Ppv_gen,
+                     "Ebat": Ebat, "Pgrid": Pgrid}
 # endregion
