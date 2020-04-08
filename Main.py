@@ -15,6 +15,7 @@ for c in constraints:
 picShavingProb.setObjective(objFct)
 
 picShavingProb.writeLP("PicShavingProblem.txt")
+picShavingProb.writeMPS("PicShavingProblem.mps")
 
 picShavingProb.solve()
 
