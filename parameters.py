@@ -15,7 +15,7 @@ T = np.arange(0, sum(Mrange)+1)  # Time of the year for each 15 min
 
 # region #Parameter definition
 # To be changed
-Ppv = np.random.rand(len(T))*700  # kW To be changed
+Ppv = np.loadtxt("ProjetENE8230PicShaving/Data/PVpwr.txt")  # kW To be changed
 
 Npv_max = 4000  # To be changed
 Nbat_max = 10000  # To be changed
