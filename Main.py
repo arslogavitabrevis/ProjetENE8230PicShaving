@@ -39,7 +39,7 @@ varNames = ["Npv", "Nbat", "Ppv_bat", "Ppv_load", "Pbdc", "Pgridmax",
            "Pfac", "Pfacmin", "Ppv_gen", "Ebat", "Pgrid"]
 
 for varName in varNames:
-    with open("Results/VariableValue{}.txt".format(varName), 'w') as f:
+    with open("Results/{}.txt".format(varName), 'w') as f:
         f.write("{}\n".format(varName))
-        f.writelines(["{} = {:,.1f}\n".format(v.getName(), v.valueOrDefault())
+        f.writelines(["{:.2f}\n".format(v.valueOrDefault())
                           for v in decisionVariables[varName]])
