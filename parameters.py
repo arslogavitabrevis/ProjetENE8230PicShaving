@@ -17,16 +17,16 @@ T = np.arange(0, sum(Mrange)+1)  # Time of the year for each 15 min
 # To be changed
 Ppv = np.loadtxt("ProjetENE8230PicShaving/Data/PVpwr.txt")  # kW To be changed
 
-Npv_max = 4000  # To be changed
-Nbat_max = 10000  # To be changed
+Npv_max = 13404 #2020-04-07
+Nbat_max = 100000  # There is no real limit but money
 
-Cap_bat = 2  # To be changed
-ETAbat_ch = 0.8  # To be changed
-ETAbat_dc = 0.8
-ETA_inv = 0.6  # To be changed
+Cap_bat = 5.62  # [kWh]
+ETAbat_ch = 0.72  
+ETAbat_dc = 1
+ETA_inv = 0.9  
 
-Pbat_ch_max = 200  # To be changed
-Pbat_dc_max = 200  # To be changed
+Pbat_ch_max = 2.53  # [kW/batterie]
+Pbat_dc_max = 2.53  # [kW/batterie]
 Omega = 10000  # Maximum power athorized [kW]
 omega = 5000  # Minimum invoiced power [kW]
 
@@ -35,11 +35,11 @@ D = np.loadtxt("ProjetENE8230PicShaving/Data/Data1.csv", skiprows=1)  # kW
 # Cost
 Ckw = 13.26  # $/kW
 CkWh = 0.0346  # $/kWh
-Cbat = 100  # $/battery
-Cbatop = 20  # $/battery/kWh
-Cpv = 750  # $/panel To be changed
-Cpvop = 50  # $/panel/year To be changed
+Cbat = 549*Cap_bat  # $/battery
+Cbatop = 4.5  # $/battery/kWh
+Cpv = 996  # $/panel
+Cpvop =  4.16 # $/panel-year
 
 # Simulation
-numberOfYear = 20  # To be changed
+numberOfYear = 20
 # endregion
