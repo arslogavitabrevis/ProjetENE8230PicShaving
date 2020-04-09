@@ -3,7 +3,7 @@ import numpy as np
 from parameters import (
     T, M, Cap_bat, ETAbat_ch, ETAbat_dc, ETA_inv, Pbat_ch_max, Pbat_dc_max, deltaT, Mbound, Omega, omega, Ppv, D)
 from decisionVariables import (
-    Ppv_bat, Ppv_load, Ppv_gen, Nbat, Pbdc, Ebat, Pgrid, Pgridmax, Npv, Pfac, Pfacmin)
+    Ppv_bat, Ppv_load, Ppv_gen, Nbat, Pbdc, Ebat, Pgrid, Pgridmax, Npv, Pfac, Pfacmin,Pfacfy,Pfacminfy)
 
 constraints = []
 
@@ -58,10 +58,13 @@ constraints.extend(list(map(lambda t:
 
 # Mimimun power invoice...
 # From winter month for year 2 to year n
-for m in M[12:]:
+for m in M:
+    #Select the 12 previous month
     months = np.arange(m-12+len(M), m+len(M)) % len(M) + 1
+    #Define the winter months
     conditions = np.array([months % 12 == 1, months % 12 ==
                            2, months % 12 == 3, months % 12 == 12]).transpose()
+    #From those months, select the months that are winter months
     Mwinter = np.select(
         np.array([(months-1) % 12+1 == 1, (months-1) % 12+1 == 2, (months-1) % 12+1 == 3, (months-1) % 12+1 == 12]).transpose(), months)
     for mw in Mwinter:
@@ -82,43 +85,43 @@ constraints.extend(
     [plp.LpConstraint(
         name="MinPowerInvoiceWint_fromY0_m{:2d}_t{:5d}".format(m, t),
         e=plp.LpAffineExpression(
-            [(Pfacmin[m-1], 1)]),
+            [(Pfacminfy[m-1], 1)]),
         sense=plp.LpConstraintGE,
         rhs=0.75*D[t-1])
         for m in M[:3]
         for mw in y0[m-1]
         for t in range(Mbound[mw-1], Mbound[mw])])
 
-# April to No
+            # April to No
 for m in M[3:11]:
     constraints.append(
         plp.LpConstraint(
             name="MinPowerInvoiceWint_fromY0_m{:2d}".format(m),
             e=plp.LpAffineExpression(
-                [(Pfacmin[m-1], 1), (Pfacmin[2], -1)]),
+                [(Pfacminfy[m-1], 1), (Pfacminfy[2], -1)]),
             sense=plp.LpConstraintGE,
             rhs=0))
 
-    # Constraint from Pgridmax of year 1
-    # Fev to April
+        # Constraint from Pgridmax of year 1
+            # Fev to April
 y1 = [[1], [1, 2], [1, 2, 3]]
 constraints.extend([
     plp.LpConstraint(
         name="MinPowerInvoiceWint_fromY1_m{:2d}_mw{}".format(m, mw),
         e=plp.LpAffineExpression(
-            [(Pfacmin[m-1], 1), (Pgridmax[mw-1], -0.75)]),
+            [(Pfacminfy[m-1], 1), (Pgridmax[mw-1], -0.75)]),
         sense=plp.LpConstraintGE,
         rhs=0)
     for m in M[1:4]
     for mw in y1[m-2]])
 
-# May to Dec
+            # May to Dec
 for m in M[4:12]:
     constraints.append(
         plp.LpConstraint(
             name="MinPowerInvoiceWint_fromY1_m{:2d}".format(m),
             e=plp.LpAffineExpression(
-                [(Pfacmin[m-1], 1), (Pfacmin[3], -1)]),
+                [(Pfacminfy[m-1], 1), (Pfacminfy[3], -1)]),
             sense=plp.LpConstraintGE,
             rhs=0))
 
@@ -134,7 +137,8 @@ constraints.extend([
     for t in range(Mbound[m-1], Mbound[m])])
 
 # Invoiced power
-# From minimum power
+    # For year 2 to year n 
+        # From minimum power
 for m in M:
     constraints.append(
         plp.LpConstraint(
@@ -144,7 +148,7 @@ for m in M:
             sense=plp.LpConstraintGE,
             rhs=0))
 
-    # From Pgridmax
+        # From Pgridmax
 for m in M:
     constraints.append(
         plp.LpConstraint(
@@ -153,6 +157,28 @@ for m in M:
                 [(Pfac[m-1], 1), (Pgridmax[m-1], -1)]),
             sense=plp.LpConstraintGE,
             rhs=0))
+
+    # For first year
+        # From minimum power
+for m in M[:12]:
+    constraints.append(
+        plp.LpConstraint(
+            name="InvoicedPowerFromPminFY_m{:2d}".format(m),
+            e=plp.LpAffineExpression(
+                [(Pfacfy[m-1], 1), (Pfacminfy[m-1], -1)]),
+            sense=plp.LpConstraintGE,
+            rhs=0))
+
+        # From Pgridmax
+for m in M[:12]:
+    constraints.append(
+        plp.LpConstraint(
+            name="InvoicedPowerFromPgridmaxFY_m{:2d}".format(m),
+            e=plp.LpAffineExpression(
+                [(Pfacfy[m-1], 1), (Pgridmax[m-1], -1)]),
+            sense=plp.LpConstraintGE,
+            rhs=0))
+
 # endregion
 
 # region # Equality constraint

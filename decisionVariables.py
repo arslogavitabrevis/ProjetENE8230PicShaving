@@ -60,6 +60,20 @@ Pfacmin = [plp.LpVariable(
     name="Pfacmin_{}".format(m))
     for m in M]
 
+# Power invoice for a month
+Pfacfy = [plp.LpVariable(
+    cat=plp.LpContinuous,
+    lowBound=omega,
+    name="Pfacfy_{}".format(m))
+    for m in M[:12]]
+
+# Minimum power invoice
+Pfacminfy = [plp.LpVariable(
+    cat=plp.LpContinuous,
+    lowBound=omega,
+    name="Pfacminfy_{}".format(m))
+    for m in M[:12]]
+
 # Power generated from all solar panel
 Ppv_gen = [plp.LpVariable(
     cat=plp.LpContinuous,
@@ -85,7 +99,7 @@ Pgrid = [plp.LpVariable(
 decisionVariables = {"Npv": [Npv], "Nbat": [Nbat], "Ppv_bat": Ppv_bat,
                      "Ppv_load": Ppv_load, "Pbdc": Pbdc, "Pgridmax": Pgridmax,
                      "Pfac": Pfac, "Pfacmin": Pfacmin, "Ppv_gen": Ppv_gen,
-                     "Ebat": Ebat, "Pgrid": Pgrid}
+                     "Ebat": Ebat, "Pgrid": Pgrid, "Pfacfy": Pfacfy, "Pfacminfy": Pfacminfy}
 # endregion
 
 print("Decisions variables defined")

@@ -2,7 +2,7 @@ import pulp as plp
 from parameters import (
     M, Mrange, T, numberOfYear, deltaT, Mbound, Ckw, CkWh, Cpv, Cpvop, Cbat, Cbatop)
 from decisionVariables import (
-    Npv, Nbat, Pgridmax, Pgrid, Pbdc, Pfac)
+    Npv, Nbat, Pgridmax, Pgrid, Pbdc, Pfac, Pfacfy)
 
 periodIn30Days = int(30*24/deltaT)
 
@@ -13,13 +13,13 @@ objFct = plp.lpSum(
 
 # Cost from the first year invoiced power
 objFct.update(plp.lpSum(
-    Pfac[m-1]*Ckw*Mrange[m-1]/periodIn30Days
+    Pfacfy[m-1]*Ckw*Mrange[m-1]/periodIn30Days
     for m in M[:12]))
 
 # Cost from others years invoiced power
 objFct.update(plp.lpSum(
     ((numberOfYear-1)/2)*Pfac[m-1]*Ckw*Mrange[m-1]/periodIn30Days
-    for m in M[12:]))
+    for m in M))
 
 # Energy from grid and battery operation cost first year
 objFct.update(plp.lpSum(
@@ -29,6 +29,6 @@ objFct.update(plp.lpSum(
 # Energy from grid and battery operation cost others years
 objFct.update(plp.lpSum(
     ((numberOfYear-1)/(len(M)/12))*deltaT*(Pgrid[t]*CkWh + Pbdc[t]*Cbatop)
-    for t in T[Mbound[12]:]))
+    for t in T))
 
 print("Objective function defined")
