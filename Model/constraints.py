@@ -1,8 +1,11 @@
 import pulp as plp
 import numpy as np
-from parameters import (
+from sys import path
+path.append(".")
+
+from ProjetENE8230PicShaving.Model.parameters import (
     T, M, Cap_bat, ETAbat_ch, ETAbat_dc, ETA_inv, Pbat_ch_max, Pbat_dc_max, deltaT, Mbound, Omega, omega, Ppv, D)
-from decisionVariables import (
+from ProjetENE8230PicShaving.Model.decisionVariables import (
     Ppv_bat, Ppv_load, Ppv_gen, Nbat, Pbdc, Ebat, Pgrid, Pgridmax, Npv, Pfac, Pfacmin,Pfacfy,Pfacminfy)
 
 constraints = []

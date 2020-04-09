@@ -1,13 +1,14 @@
 from sys import path
-import matplotlib.pyplot as plt
-import os
-import numpy as np
 path.append(".")
-from ProjetENE8230PicShaving.parameters import Pbat_ch_max,ETAbat_ch
+from os import listdir
+from ProjetENE8230PicShaving.Model.parameters import Pbat_ch_max,ETAbat_ch
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 def generateGraph():
 
-    txtFileNames = os.listdir("./ProjetENE8230PicShaving/Results")
+    txtFileNames = listdir("./ProjetENE8230PicShaving/Results")
     for s in ["AllVariableValue.txt", "GeneralInfo.txt", "desktop.ini"]:
         try:
             txtFileNames.remove(s)

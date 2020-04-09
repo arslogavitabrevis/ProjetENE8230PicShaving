@@ -2,9 +2,9 @@ import pulp as plp
 import numpy as np
 from os import path, makedirs
 from datetime import datetime
-from constraints import constraints
-from objectiveFunction import objFct
-from decisionVariables import decisionVariables
+from Model.constraints import constraints
+from Model.objectiveFunction import objFct
+from Model.decisionVariables import decisionVariables
 
 # Initialisation of the optimisation problem
 picShavingProb = plp.LpProblem(name="PicShavingProblem", sense=plp.LpMinimize)
@@ -17,8 +17,8 @@ print("Setting objective functions")
 picShavingProb.setObjective(objFct)
 
 # print("Output some file representing the model")
-# picShavingProb.writeLP("ProjetENE8230PicShaving/PicShavingProblem.txt")
-# picShavingProb.writeMPS("ProjetENE8230PicShaving/PicShavingProblem.mps")
+# picShavingProb.writeLP("ProjetENE8230PicShaving/Model/PicShavingProblem.txt")
+# picShavingProb.writeMPS("ProjetENE8230PicShaving/Model/PicShavingProblem.mps")
 
 print("Solving linear problem")
 picShavingProb.solve()

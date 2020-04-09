@@ -1,7 +1,9 @@
 import pulp as plp
-from parameters import (
+from sys import path
+path.append(".")
+from ProjetENE8230PicShaving.Model.parameters import (
     M, Mrange, T, numberOfYear, deltaT, Mbound, Ckw, CkWh, Cpv, Cpvop, Cbat, Cbatop)
-from decisionVariables import (
+from ProjetENE8230PicShaving.Model.decisionVariables import (
     Npv, Nbat, Pgridmax, Pgrid, Pbdc, Pfac, Pfacfy)
 
 periodIn30Days = int(30*24/deltaT)
