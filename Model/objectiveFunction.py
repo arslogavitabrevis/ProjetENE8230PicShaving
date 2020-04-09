@@ -20,7 +20,7 @@ objFct.update(plp.lpSum(
 
 # Cost from others years invoiced power
 objFct.update(plp.lpSum(
-    ((numberOfYear-1)/2)*Pfac[m-1]*Ckw*Mrange[m-1]/periodIn30Days
+    ((numberOfYear-1)/(len(M)/12))*Pfac[m-1]*Ckw*Mrange[m-1]/periodIn30Days
     for m in M))
 
 # Energy from grid and battery operation cost first year
