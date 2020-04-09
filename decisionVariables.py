@@ -87,3 +87,5 @@ decisionVariables = {"Npv": [Npv], "Nbat": [Nbat], "Ppv_bat": Ppv_bat,
                      "Pfac": Pfac, "Pfacmin": Pfacmin, "Ppv_gen": Ppv_gen,
                      "Ebat": Ebat, "Pgrid": Pgrid}
 # endregion
+
+print("Decisions variables defined")

@@ -205,3 +205,5 @@ for var in [Pgrid[0], Pbdc[0], Ppv_bat[0], Ppv_gen[0], Ppv_load[0]]:
             sense=plp.LpConstraintEQ,
             rhs=0))
 # endregion
+
+print("Constraints defined")

@@ -30,3 +30,5 @@ objFct.update(plp.lpSum(
 objFct.update(plp.lpSum(
     ((numberOfYear-1)/(len(M)/12))*deltaT*(Pgrid[t]*CkWh + Pbdc[t]*Cbatop)
     for t in T[Mbound[12]:]))
+
+print("Objective function defined")

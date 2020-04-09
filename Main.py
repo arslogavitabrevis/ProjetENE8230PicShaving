@@ -6,21 +6,25 @@ from constraints import constraints
 from objectiveFunction import objFct
 from decisionVariables import decisionVariables
 
-# Initialisation du problème d'optimisation
+# Initialisation of the optimisation problem
 picShavingProb = plp.LpProblem(name="PicShavingProblem", sense=plp.LpMinimize)
 
+print("Addind constraints")
 for c in constraints:
     picShavingProb.addConstraint(c)
 
+print("Setting objective functions")
 picShavingProb.setObjective(objFct)
 
+print("Output some file representing the model")
 picShavingProb.writeLP("PicShavingProblem.txt")
 picShavingProb.writeMPS("PicShavingProblem.mps")
 
+print("Solving linear problem")
 picShavingProb.solve()
 
 # Check results
-print("Status:", plp.LpStatus[picShavingProb.status])
+print("\nStatus:", plp.LpStatus[picShavingProb.status])
 print("Cout ={:,.2f} ".format(plp.value(picShavingProb.objective)))
 
 if not path.exists('./Results'):
