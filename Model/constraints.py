@@ -4,7 +4,8 @@ from sys import path
 path.append(".")
 
 from ProjetENE8230PicShaving.Model.parameters import (
-    T, M, Cap_bat, ETAbat_ch, ETAbat_dc, ETA_inv, Pbat_ch_max, Pbat_dc_max, deltaT, Mbound, Omega, omega, Ppv, D)
+    T, M, Cap_bat, ETAbat_ch, ETAbat_dc, ETA_inv, Pbat_ch_max,
+     Pbat_dc_max, deltaT, Mbound, Omega, omega, Ppv, D, Dod)
 from ProjetENE8230PicShaving.Model.decisionVariables import (
     Ppv_bat, Ppv_load, Ppv_gen, Nbat, Pbdc, Ebat, Pgrid, Pgridmax, Npv, Pfac, Pfacmin,Pfacfy,Pfacminfy)
 
@@ -25,7 +26,7 @@ constraints.extend(list(map(lambda t:
                             plp.LpConstraint(
                                 name="BatCapacity_{:5d}".format(t),
                                 e=plp.LpAffineExpression(
-                                    [(Pbdc[t], ETAbat_ch), (Nbat, -Cap_bat), (Ebat[t-1], 1)]),
+                                    [(Pbdc[t], ETAbat_ch), (Nbat, -Cap_bat*Dod), (Ebat[t-1], 1)]),
                                 sense=plp.LpConstraintLE,
                                 rhs=0), T[1:])))
 
