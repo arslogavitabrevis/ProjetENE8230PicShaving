@@ -20,7 +20,7 @@ T = np.arange(0, sum(Mrange)+1)  # Time of the year for each 15 min
 # endregion
 
 # region #Parameter definition
-Ppv = np.delete(np.loadtxt("ProjetENE8230PicShaving/Data/PVpwr.txt"),
+Ppv = np.delete(np.loadtxt("Data/PVpwr.txt"),
                 np.arange(Mbound[14]-18/deltaT+1, Mbound[14]))  # kW
 Npv_max = 13404  # 2020-04-07
 Nbat_max = 100000  # There is no real limit but money
@@ -36,7 +36,7 @@ Pbat_dc_max = 2.53  # [kW/batterie]
 Omega = 10000  # Maximum power athorized [kW]
 omega = 5000  # Minimum invoiced power [kW]
 
-D = np.delete(np.loadtxt("ProjetENE8230PicShaving/Data/Data1.csv",
+D = np.delete(np.loadtxt("Data/Data1.csv",
                          skiprows=1), np.arange(Mbound[14]-18/deltaT+1, Mbound[14]))  # kW
 
 # Cost

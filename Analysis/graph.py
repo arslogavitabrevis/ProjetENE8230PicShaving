@@ -1,30 +1,30 @@
 from sys import path
 path.append(".")
 from os import listdir
-from ProjetENE8230PicShaving.Model.parameters import Pbat_ch_max,ETAbat_ch
+from Model.parameters import Pbat_ch_max,ETAbat_ch
 import matplotlib.pyplot as plt
 import numpy as np
 
 
 def generateGraph():
 
-    txtFileNames = listdir("./ProjetENE8230PicShaving/Results")
+    txtFileNames = listdir("./Results")
     for s in ["AllVariableValue.txt", "GeneralInfo.txt", "desktop.ini"]:
         try:
             txtFileNames.remove(s)
-        finally:
+        except ValueError:
             pass
 
     Dvar = {txtFileName.split(".")[0]:
             np.loadtxt(
-                "./ProjetENE8230PicShaving/Results/{}".format(txtFileName), skiprows=1)
+                "./Results/{}".format(txtFileName), skiprows=1)
             for txtFileName in txtFileNames}
 
     for varName in Dvar.keys():
         plt.plot(Dvar[varName])
         plt.title(varName)
         plt.savefig(
-            "./ProjetENE8230PicShaving/Analysis/{}.png".format(varName))
+            "./Analysis/{}.png".format(varName))
         plt.close()
 
     for varName in ["Ppv_bat", "Pbdc", "Ebat"]:
@@ -37,7 +37,7 @@ def generateGraph():
     plt.ylabel("Heures")
     plt.xlabel("kW/kWh")
     plt.legend()
-    plt.savefig("./ProjetENE8230PicShaving/Analysis/ComportementBatteries.png")
+    plt.savefig("./Analysis/ComportementBatteries.png")
     plt.close()
 
 

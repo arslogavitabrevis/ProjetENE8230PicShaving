@@ -1,7 +1,7 @@
 import pulp as plp
 from sys import path
 path.append(".")
-from ProjetENE8230PicShaving.Model.parameters import T, M, Npv_max, Nbat_max, Omega, omega
+from Model.parameters import T, M, Npv_max, Nbat_max, Omega, omega
 
 # region # Decision variables:
 
