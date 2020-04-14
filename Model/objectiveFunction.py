@@ -1,9 +1,9 @@
 import pulp as plp
 from sys import path
 path.append(".")
-from ProjetENE8230PicShaving.Model.parameters import (
+from Model.parameters import (
     M, Mrange, T, numberOfYear, deltaT, Mbound, Ckw, CkWh, Cpv, Cpvop, Cbat, Cbatopvar,Cbatopfix)
-from ProjetENE8230PicShaving.Model.decisionVariables import (
+from Model.decisionVariables import (
     Npv, Nbat, Pgridmax, Pgrid, Pbdc, Pfac, Pfacfy)
 
 periodIn30Days = int(30*24/deltaT)
@@ -11,7 +11,7 @@ periodIn30Days = int(30*24/deltaT)
 # Initial cost and solar panel operation cost
 objFct = plp.lpSum(
     Npv*(Cpv+numberOfYear*Cpvop)
-    + Nbat*(Cbat+Cbatopfix))
+    + Nbat*(Cbat+numberOfYear*Cbatopfix))
 
 # Cost from the first year invoiced power
 objFct.update(plp.lpSum(
