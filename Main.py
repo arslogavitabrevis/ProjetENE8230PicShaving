@@ -28,20 +28,20 @@ print("\nStatus:", plp.LpStatus[picShavingProb.status])
 print("Cout ={:,.2f} ".format(plp.value(picShavingProb.objective)))
 
 print("Saving variables values")
-if not path.exists('./Results'):
-    makedirs('Results')
+if not path.exists('./ResultsNoLimit'):
+    makedirs('ResultsNoLimit')
 
-with open("Results/GeneralInfo.txt", 'w') as f:
+with open("ResultsNoLimit/GeneralInfo.txt", 'w') as f:
     f.write("{}\n".format(datetime.now()))
     f.write("Status: {}\n".format(plp.LpStatus[picShavingProb.status]))
     f.write("Cout ={:,.2f}\n".format(plp.value(picShavingProb.objective)))
 
-with open("Results/AllVariableValue.txt", 'w') as f:
+with open("ResultsNoLimit/AllVariableValue.txt", 'w') as f:
     f.writelines(list(map(lambda v: "{} = {:.1f}\n".format(v.name, v.varValue),
                           picShavingProb.variables())))
 
 for varName in decisionVariables.keys():
-    with open("Results/{}.txt".format(varName), 'w') as f:
+    with open("ResultsNoLimit/{}.txt".format(varName), 'w') as f:
         f.write("{}\n".format(varName))
         f.writelines(["{:.2f}\n".format(v.valueOrDefault())
                       for v in decisionVariables[varName]])

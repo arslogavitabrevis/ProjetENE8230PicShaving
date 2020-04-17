@@ -33,7 +33,7 @@ ETA_inv = 0.9  # Inverter efficiency
 
 Pbat_ch_max = 2.53  # [kW/batterie]
 Pbat_dc_max = 2.53  # [kW/batterie]
-Omega = 10000  # Maximum power athorized [kW]
+Omega = 100000000  # Maximum power athorized [kW]
 omega = 5000  # Minimum invoiced power [kW]
 
 D = np.delete(np.loadtxt("Data/Data1.csv",
