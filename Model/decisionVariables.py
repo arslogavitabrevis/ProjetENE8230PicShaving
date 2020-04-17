@@ -7,14 +7,14 @@ from Model.parameters import T, M, Npv_max, Nbat_max, Omega, omega
 
 # Number of solar panel
 Npv = plp.LpVariable(
-    cat=plp.LpInteger,
+    cat=plp.LpContinuous,
     lowBound=0,
     upBound=Npv_max,
     name="Npv")
 
 # Number of batteries
 Nbat = plp.LpVariable(
-    cat=plp.LpInteger,
+    cat=plp.LpContinuous,
     lowBound=0,
     upBound=Nbat_max,
     name="Nbat")

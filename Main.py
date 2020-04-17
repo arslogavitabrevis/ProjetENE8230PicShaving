@@ -10,8 +10,9 @@ from Model.decisionVariables import decisionVariables
 picShavingProb = plp.LpProblem(name="PicShavingProblem", sense=plp.LpMinimize)
 
 print("Addind constraints")
-for c in constraints:
-    picShavingProb.addConstraint(c)
+for k in constraints.keys():
+    for c in constraints[k]:
+        picShavingProb.addConstraint(c)
 
 print("Setting objective functions")
 picShavingProb.setObjective(objFct)
@@ -45,6 +46,16 @@ for varName in decisionVariables.keys():
         f.write("{}\n".format(varName))
         f.writelines(["{:.2f}\n".format(v.valueOrDefault())
                       for v in decisionVariables[varName]])
+
+print("Saving dual values")
+if not path.exists('./Results/Duals'):
+    makedirs('Results/Duals')
+
+for cName in constraints.keys():
+    with open("Results/Duals/{}.txt".format(cName), 'w') as f:
+        f.write("{}\n".format(cName))
+        f.writelines(["{:.3f}\n".format(c.pi)
+                      for c in constraints[cName]])
 
 print("Generating graph")
 from Analysis.graph import generateGraph

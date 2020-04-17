@@ -1,0 +1,2 @@
+BatteryInitialEnergy
+-0.519
